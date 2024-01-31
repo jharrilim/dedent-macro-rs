@@ -43,7 +43,7 @@ pub fn dedent(input: TokenStream) -> TokenStream {
             .map(|s| s.value().to_string())
             .ok()
             .expect_or_abort("Expected a string literal");
-        dedent_impl(&s)
+        analyze(&s)
     };
 
     lines.lines.iter_mut().for_each(|l| {
@@ -60,7 +60,7 @@ pub fn dedent(input: TokenStream) -> TokenStream {
         .into()
 }
 
-fn dedent_impl(s: &str) -> Lines {
+fn analyze(s: &str) -> Lines {
     let s = s
         .trim_start_matches('"')
         .trim_end_matches('"')
@@ -129,7 +129,7 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn dedent_a_string() {
-        let s = dedent_impl("
+        let s = analyze("
           foo
             bar
         ");
