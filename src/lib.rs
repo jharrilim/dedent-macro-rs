@@ -15,6 +15,20 @@ struct Line {
     leading_space_count: i32,
 }
 
+/// Use this macro to dedent string literals.
+/// 
+/// # Examples
+/// 
+/// ```
+/// use dedent_macro::dedent;
+/// fn foo() {
+///   let s = dedent!("
+///     Hello,
+///     World!
+///   ");
+/// }
+/// 
+/// ```
 #[proc_macro]
 #[proc_macro_error]
 pub fn dedent(input: TokenStream) -> TokenStream {

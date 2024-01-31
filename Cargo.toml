@@ -1,7 +1,14 @@
 [package]
 name = "dedent-macro"
+description = "Procedural macro for dedenting string literals."
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/jharrilim/dedent-macro-rs"
+readme = "README.md"
+license = "MIT"
+license-file = "LICENSE"
+
+keywords = ["dedent", "strings"]
 
 [lib]
 proc-macro = true
