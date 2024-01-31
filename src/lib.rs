@@ -1,4 +1,6 @@
+use litrs::{ByteStringLit, StringLit};
 use proc_macro::TokenStream;
+use proc_macro_error::{proc_macro_error, OptionExt};
 use quote::ToTokens;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -14,15 +16,20 @@ struct Line {
 }
 
 #[proc_macro]
+#[proc_macro_error]
 pub fn dedent(input: TokenStream) -> TokenStream {
-    let mut lines = input
+    let first_arg = input
         .into_iter()
         .next()
-        .map(|f| {
-            let s = f.to_string();
-            dedent_impl(&s)
-        })
-        .expect("Pass a string literal to the first argument: dedent!(\"\")");
+        .expect_or_abort("Expected a string literal but found nothing.");
+
+    let mut lines = {
+        let s = StringLit::try_from(first_arg.clone())
+            .map_err(|_| ByteStringLit::try_from(first_arg))
+            .map(|s| s.value().to_string())
+            .ok();
+        dedent_impl(&s.unwrap())
+    };
 
     lines.lines.iter_mut().for_each(|l| {
         l.line = remove_space(l.line.clone(), lines.least_spaces);

@@ -1,4 +1,5 @@
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     use dedent_macro::dedent;
 
@@ -30,5 +31,16 @@ mod tests {
             bar
         ");
         assert_eq!(s, "foo\n   \n   \n  bar");
+    }
+
+    #[test]
+
+    fn a_raw_string_literal() {
+        let s = dedent!(r"
+          foo
+            \
+        ");
+        assert_eq!(s, r"foo
+  \");
     }
 }
