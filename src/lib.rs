@@ -27,8 +27,9 @@ pub fn dedent(input: TokenStream) -> TokenStream {
         let s = StringLit::try_from(first_arg.clone())
             .map_err(|_| ByteStringLit::try_from(first_arg))
             .map(|s| s.value().to_string())
-            .ok();
-        dedent_impl(&s.unwrap())
+            .ok()
+            .expect_or_abort("Expected a string literal");
+        dedent_impl(&s)
     };
 
     lines.lines.iter_mut().for_each(|l| {
@@ -51,7 +52,7 @@ fn dedent_impl(s: &str) -> Lines {
         .trim_end_matches('"')
         .trim_start_matches('\n');
     let mut least_spaces: Option<i32> = None;
-    let lines: Vec<Line> = s
+    let mut lines: Vec<Line> = s
         .lines()
         .map(|l| {
             let mut space_count = 0;
@@ -86,10 +87,11 @@ fn dedent_impl(s: &str) -> Lines {
         .collect();
 
     Lines {
-        lines: match lines.last() {
+        lines: match lines.last_mut() {
             Some(line) => {
                 if line.line.chars().all(|c| c.is_whitespace()) {
-                    lines.split_last().unwrap().1.to_vec()
+                    line.line = "".to_string();
+                    lines
                 } else {
                     lines
                 }
@@ -118,8 +120,9 @@ mod tests {
         ");
 
         assert_eq!(s.least_spaces, 10);
-        assert_eq!(s.lines.len(), 2);
+        assert_eq!(s.lines.len(), 3);
         assert_eq!(s.lines[0].leading_space_count, 10);
         assert_eq!(s.lines[1].leading_space_count, 12);
+        assert_eq!(s.lines[2].line.as_str(), "");
     }
 }

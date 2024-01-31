@@ -9,7 +9,7 @@ mod tests {
           foo
           bar
         ");
-        assert_eq!(s, "foo\nbar");
+        assert_eq!(s, "foo\nbar\n");
     }
 
     #[test]
@@ -18,7 +18,7 @@ mod tests {
           foo
             bar
         ");
-        assert_eq!(s, "foo\n  bar");
+        assert_eq!(s, "foo\n  bar\n");
     }
 
     #[test]
@@ -30,7 +30,7 @@ mod tests {
              
             bar
         ");
-        assert_eq!(s, "foo\n   \n   \n  bar");
+        assert_eq!(s, "foo\n   \n   \n  bar\n");
     }
 
     #[test]
@@ -41,6 +41,20 @@ mod tests {
             \
         ");
         assert_eq!(s, r"foo
-  \");
+  \
+");
     }
+
+    #[test]
+    fn a_raw_string_literal_with_hash_delimiters() {
+        let s = dedent!(r###"
+          # dedent-macro
+          ## Installation
+        "###);
+
+        assert_eq!(s, r###"# dedent-macro
+## Installation
+"###);
+    }
+
 }
