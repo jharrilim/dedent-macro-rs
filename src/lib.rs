@@ -69,13 +69,14 @@ fn dedent_impl(s: &str) -> Lines {
             match least_spaces {
                 None => least_spaces = Some(space_count),
                 Some(s) => {
-                    least_spaces =
-                        if s < space_count || line == "" || line.chars().all(|c| c.is_whitespace())
-                        {
-                            least_spaces
-                        } else {
-                            Some(space_count)
-                        };
+                    least_spaces = if s < space_count
+                        || line.is_empty()
+                        || line.chars().all(|c| c.is_whitespace())
+                    {
+                        least_spaces
+                    } else {
+                        Some(space_count)
+                    };
                 }
             }
 
