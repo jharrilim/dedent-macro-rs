@@ -1,4 +1,4 @@
-# dedent-rs
+# dedent-macro
 
 This crate provides a simple compile-time macro to dedent strings.
 
